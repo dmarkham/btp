@@ -7,6 +7,7 @@ set.seed(68768768)
 print("Reading the data")
 train <-read.csv( "../data/train.csv",  header = TRUE, na.strings = "NA")
 test <-read.csv( "../data/test.csv",  header = TRUE, na.strings = "NA")
+print("Files loaded")
 
 # Uncomment the line below to use only a small portion of the training data
 # train = train[1:20000,]
