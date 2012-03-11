@@ -45,19 +45,40 @@ $avg = $avg / scalar(@{$models{$test_file}});
 
 my $span_size = ($max - $min) / $buckets;
 
-print join("\t", "Min:$min", "MAx:$max", "Avg:$avg", "Span Size$span_size") . "\n";
+print join("\t", "Min:$min", "Max:$max", "Avg:$avg", "Span Size$span_size") . "\n";
 
 ## build groups
 my @span_ids;
 for (my $i = 0 ; $i < scalar(@{$models{$test_file}}) ; $i++) {
-  my $span = int($models{$files[10]}->[$i] / $span_size);
+  my $span = int($models{$files[2]}->[$i] / $span_size);
   push @{$span_ids[$span]}, $i;
 }
 
 my $data = get_score(@span_ids);
 print Dumper($data);
-
+my $score = sprintf("%.6f", $data->{score});
+my $file = "../models/${name}_ensemble_${score}.csv";
+open(TEMP, ">$file") || die $!;
+for (my $i = 0 ; $i < scalar(@span_ids) ; $i++) {
+  if ($data->{models}{$i}) {
+    my $f = $data->{models}{$i};
+    $f =~ s/\.csv//;
+    print TEMP  "$f\n";
+  } else {
+    my $f = $files[0];
+    $f =~ s/\.csv//;
+    print TEMP "$f\n";
+  }
+}
+close(TEMP);
 exit;
+
+#print Dumper($data);
+##
+##
+##
+##
+##
 
 sub get_score {
   my @span_ids = @_;
@@ -118,7 +139,7 @@ sub get_score {
 
   #print "best\t$scores{best}\n";
   #print Dumper(\%best);
-  return {score => $scores{best}, models => \%best};
+  return {buckets => $buckets, score => $scores{best}, models => \%best};
 }
 
 for (my $i = 0 ; $i < scalar(@{$models{$test_file}}) ; $i++) {
