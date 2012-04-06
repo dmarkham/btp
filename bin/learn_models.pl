@@ -57,19 +57,35 @@ for (my $i = 0 ; $i < scalar(@{$models{$test_file}}) ; $i++) {
 my $data = get_score(@span_ids);
 print Dumper($data);
 my $score = sprintf("%.6f", $data->{score});
-my $file = "../models/${name}_ensemble_${score}.csv";
+my $file = "../models/${name}_ensemble_${score}.r";
+
+my $best_overall = $files[0];
+$best_overall =~ s/\.csv//;
+
 open(TEMP, ">$file") || die $!;
-for (my $i = 0 ; $i < scalar(@span_ids) ; $i++) {
+print TEMP "model_info <- list(buckets=400,  span_size=$span_size, best=\"$best_overall\")\n";
+
+print TEMP 'model_info$models <- c(';
+my $span_count = scalar(@span_ids);
+
+for (my $i = 1 ; $i <= $buckets ; $i++) {
+  my $str;
   if ($data->{models}{$i}) {
-    my $f = $data->{models}{$i};
-    $f =~ s/\.csv//;
-    print TEMP  "$f\n";
+    $str = $data->{models}{$i};
+    $str =~ s/\.csv//;
+    $str  = "\"$str\""; 
   } else {
-    my $f = $files[0];
-    $f =~ s/\.csv//;
-    print TEMP "$f\n";
+    $str  = "\"$best_overall\"";
   }
+  
+  if($i != $buckets){
+    $str = "$str,\n";
+  }
+  print TEMP  $str;
 }
+print  TEMP ")\n";
+
+
 close(TEMP);
 exit;
 
