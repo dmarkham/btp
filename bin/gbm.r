@@ -16,10 +16,10 @@ appendNAs <- function(dataset) {
 
 
 
-print("Reading the data")
+#print("Reading the data")
 #train <-read.csv( "../data/train_part_train.csv",  header = TRUE, na.strings = "NA")
 #test <-read.csv( "../data/train_part_test.csv",  header = TRUE, na.strings = "NA")
-print("Resolving NAs")
+#print("Resolving NAs")
 #train <- appendNAs(train)
 #test <- appendNAs(test)
 
@@ -29,10 +29,10 @@ print("Resolving NAs")
 
 
 folds <- sample(1:3,1)
-GBM_NTREES <- sample(500:1000,1)
+GBM_NTREES <- sample(200:600,1)
 GBM_SHRINKAGE <- sample(1:50,1)/1000 
-GBM_DEPTH <-  sample(4:10,1)
-GBM_MINOBS <- sample(20:150,1)
+GBM_DEPTH <-  sample(3:20,1)
+GBM_MINOBS <- sample(10:200,1)
 #if(length(trainrows) < GBM_MINOBS){
 #  GBM_MINOBS <- round(length(trainrows) * .3);
 #}
