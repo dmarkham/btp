@@ -15,7 +15,6 @@ my @files = grep {/^$name/ && -f "$some_dir/$_"} readdir($dh);
 closedir $dh;
 
 warn "found files\n" . Dumper(\@files);
-
 my %models;
 
 ## read in all the model data
@@ -58,43 +57,77 @@ my $data = get_score(@span_ids);
 print Dumper($data);
 my $score = sprintf("%.6f", $data->{score});
 my $file = "../models/${name}_ensemble_${score}.r";
+open(TEMP, ">$file") || die $!;
 
 my $best_overall = $files[0];
 $best_overall =~ s/\.csv//;
 
-open(TEMP, ">$file") || die $!;
-print TEMP "model_info <- list(buckets=400,  span_size=$span_size, best=\"$best_overall\")\n";
-
+print TEMP "model_info <- list(buckets=$buckets,  score=$score, span_size=$span_size, best=\"$best_overall\")\n";
 print TEMP 'model_info$models <- c(';
-my $span_count = scalar(@span_ids);
+my %seen;
 
 for (my $i = 1 ; $i <= $buckets ; $i++) {
   my $str;
   if ($data->{models}{$i}) {
     $str = $data->{models}{$i};
     $str =~ s/\.csv//;
-    $str  = "\"$str\""; 
+    $str = "\"$str\"";
   } else {
-    $str  = "\"$best_overall\"";
+    $str = "\"$best_overall\"";
   }
-  
-  if($i != $buckets){
+  $seen{$str} =1;
+
+  if ($i != $buckets) {
     $str = "$str,\n";
   }
-  print TEMP  $str;
+  print TEMP $str;
 }
-print  TEMP ")\n";
+print TEMP ")\n";
+
+print TEMP 'model_info$uniq_models <- c(';
+print TEMP join(",", keys %seen);
+print TEMP ")\n";
 
 
 close(TEMP);
 exit;
 
-#print Dumper($data);
-##
-##
-##
-##
-##
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 sub get_score {
   my @span_ids = @_;
