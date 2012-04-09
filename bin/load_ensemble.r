@@ -20,8 +20,9 @@ print("Reading the data")
 test <-read.csv( "../data/test.csv",  header = TRUE, na.strings = "NA")
 test <- appendNAs(test)
 print("Done With Data")
-ems <- "../models/testrun_ensemble_0.799943.r"
+#ems <- "../models/testrun_ensemble_0.799943.r"
 
+print(ems)
 source(ems)
 
 
@@ -83,7 +84,7 @@ for (i in c(1:model_info$buckets)){
 print("Creating the Submission File")
 predictions_df  <- data.frame(test$id, predictions)
 names(predictions_df)  <- c("id", "trade_price")
-write.csv(predictions_df, file = sprintf("../data/testrun_%.7f.csv",model_info$score ), row.names = FALSE)
+write.csv(predictions_df, file = sprintf("../perdictions/testrun_%.7f.csv",model_info$score ), row.names = FALSE)
 print("Done")
 
 

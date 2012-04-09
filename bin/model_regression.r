@@ -4,11 +4,13 @@ r <- read.csv("../data/results.csv")
 #plot(r$Tested,r$Got, xlim= c(.85,.90),ylim=c(.85,.90))
 
 
-#res=lm(r$Got ~ r$Tested)
+plot(r$Tested/r$Got)
+textxy(1:nrow(r),r$Tested/r$Got,r$Notes)
+
 res=lm(r$Tested ~ r$Got)
 
 
-winners <- c( 0.71290,  0.72038,  0.72648,  0.73031,  0.75185,  0.77063,  0.78785,  0.79809,  0.80497 )
+winners <- c( 0.71290,  0.72038,  0.72648,  0.73031,  0.75185,  0.77063,  0.78785,  0.79809,  0.80497,  0.81647 )
 for (win in 1:length(winners)) {
   r <- rbind(r,c(winners[win]*res$coefficients[2] + res$coefficients[1],winners[win]))
 }
@@ -16,7 +18,7 @@ for (win in 1:length(winners)) {
 
 
 #plot(r$Tested,r$Got,)
-plot(r$Got,r$Tested,)
+plot(r$Got,r$Tested,xlim= c(.7,.9),ylim=c(.7,.9))
 textxy(r$Got,r$Tested,1:nrow(r))
 
 

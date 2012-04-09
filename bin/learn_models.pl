@@ -30,7 +30,7 @@ foreach my $file (@files) {
 my $min = 1_000_000;
 my $max = -1_000_000;
 my $avg;
-for (my $i = 0 ; $i < scalar(@{$models{$test_file}}) ; $i++) {
+for (my $i = 1 ; $i <= scalar(@{$models{$test_file}}) ; $i++) {
 
   if ($models{$files[0]}->[$i] < $min) {
     $min = $models{$files[0]}->[$i];
